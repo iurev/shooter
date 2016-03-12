@@ -4,48 +4,6 @@ var keyboardJS = require('keyboardjs');
 var us = require('underscore');
 
 
-var Monster = React.createClass({
-  getInitialState: function() {
-    return  {
-      rectStyle: {
-        cx: 0,
-        cy: 0,
-        transition: 'cx 0.3s linear',
-        fill: '#ac6a35',
-        strokeWidth: 1,
-        stroke:'rgb(0,0,0)',
-        r: 40
-      }
-    };
-  },
-  goToRandomPlace: function() {
-    var cx = this.state.rectStyle.cx + us.random(-40, 40);
-    var cy = this.state.rectStyle.cx + us.random(-40, 40);
-    this.setState({
-      rectStyle: {
-        cx,
-        cy,
-        transition: 'cx 0.1s linear',
-        fill: '#ac6a35',
-        strokeWidth: 1,
-        stroke:'rgb(0,0,0)',
-        r: 40
-      }
-    })
-  },
-  render: function() {
-    console.log(this.state);
-    var that = this;
-    console.log('render monster');
-    setTimeout(function () {
-      that.goToRandomPlace();
-    }, 1000);
-    return (
-      <circle style={this.state.rectStyle} />
-    );
-  }
-});
-
 var Hero = React.createClass({
   getInitialState: function() {
     return  {
@@ -169,7 +127,6 @@ var GrassField = React.createClass({
           {this.state.grasses}
         </g>
         <Hero />
-        <Monster />
       </svg>
     );
   }
