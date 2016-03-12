@@ -2,27 +2,10 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var keyboardJS = require('keyboardjs');
 var us = require('underscore');
-var map = require('./map.json');
 
-var Hero = React.createClass({
-  getInitialState: function() {
-    return  {
-      rectStyle: {
-        cx: '50%',
-        cy: '50%',
-        fill: '#441537',
-        strokeWidth: 1,
-        stroke:'rgb(0,0,0)',
-        r: 40
-      }
-    };
-  },
-  render: function() {
-    return (
-      <circle style={this.state.rectStyle} />
-    );
-  }
-});
+var map = JSON.parse(localStorage.getItem('map')) || [];
+window.wwjuMap = map;
+// types: sand, grass, water
 
 var Grass = React.createClass({
   getInitialState: function() {
@@ -51,6 +34,32 @@ var Grass = React.createClass({
     blue = blue + us.random(-10, 10)
     return 'rgb(' + red + ',' + green + ',' + blue + ')';
   },
+  changeType: function() {
+    var nextCellType = '';
+    switch (this.state.cellType) {
+      case 'grass':
+        nextCellType = 'sand';
+        break;
+      case 'sand':
+        nextCellType = 'water';
+        break;
+      case 'water':
+        nextCellType = 'grass';
+        break;
+    }
+    // nextCellType = 'sand';
+    // debugger
+    map[this.props.xIndex][this.props.yIndex].cellType = nextCellType;
+    localStorage.setItem('map', JSON.stringify(map));
+    // console.log(nextCellType);
+    // console.log(this.randomColor(this.getColorByType(nextCellType)));
+    this.setState(
+      {
+        cellType: nextCellType,
+        fill: this.getColorByType(nextCellType)
+      }
+    );
+  },
   render: function() {
     console.log('render grass');
     var width = 100;
@@ -64,20 +73,28 @@ var Grass = React.createClass({
     };
 
     return (
-      <rect width={width} height={height} style={rectStyle} />
+      <rect width={width} height={height} style={rectStyle} onClick={this.changeType} />
     );
   }
 });
 
+
 var GrassField = React.createClass({
   getInitialState: function() {
     var grasses = us.range(30).map(function (_, xIndex) {
+      map.push([]);
+      var row = us.last(map);
       return us.range(30).map(function (_, yIndex) {
         var xString = xIndex.toString();
         xString = us.range(3-xString.length).map(function() {return "0";}).join("") + xString;
         var yString = yIndex.toString();
         yString = us.range(3-yString.length).map(function() {return "0";}).join("") + yString;
         var key = xString + yString;
+        row.push({
+          xIndex: xIndex,
+          yIndex: yIndex,
+          cellType: 'grass'
+        })
         return (
           <Grass xIndex={xIndex} yIndex={yIndex} key={key}/>
         );
@@ -138,13 +155,10 @@ var GrassField = React.createClass({
         <g style={positionCss}>
           {this.state.grasses}
         </g>
-        <Hero />
       </svg>
     );
   }
 });
-
-
 
 ReactDOM.render(
   <GrassField />,
