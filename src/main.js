@@ -33,7 +33,7 @@ var Bush = React.createClass({
       }
 
       return (
-        <polygon style={leaveStyle} points={points} />
+        <polygon style={leaveStyle} points={points} key={index} />
       )
     });
     return {
