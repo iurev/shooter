@@ -39,7 +39,7 @@ var Bush = React.createClass({
     return {
       leaves,
       style: {
-        transform: 'translate(400px, 500px)'
+        transform: 'translate(1000px, 1500px)'
       }
     }
   },
@@ -48,7 +48,7 @@ var Bush = React.createClass({
       fill: '#000000',
       cx: '0',
       cy: '0',
-      r: '50px',
+      r: '100px',
       opacity: 0.3
     }
     return (
@@ -247,8 +247,8 @@ var GrassField = React.createClass({
       <svg width="100%" height="100%" onKeyDown={this.onKeyDown} key="1">
         <g style={positionCss}>
           {this.state.grasses}
-          <Bush />
           <Hero />
+          <Bush />
         </g>
       </svg>
     );
