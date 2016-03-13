@@ -3,7 +3,7 @@ var Point = require('paper').Point;
 var Bullet = require('./bullet').Bullet;
 var HeroPosition = require('./hero').HeroPosition;
 
-export var Bullets = React.createClass({
+var Bullets = React.createClass({
   getInitialState: function() {
     return {
       bullets: []
@@ -39,3 +39,5 @@ export var Bullets = React.createClass({
     )
   }
 });
+
+export default Bullets

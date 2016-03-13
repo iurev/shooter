@@ -3,7 +3,7 @@ var us = require('underscore');
 var map = require('./map.json');
 var Grass = require('./grass').Grass;
 
-export var GrassField = React.createClass({
+var GrassField = React.createClass({
   getInitialState: function() {
     var grasses = us.range(30).map(function (_, xIndex) {
       return us.range(30).map(function (_, yIndex) {
@@ -30,3 +30,5 @@ export var GrassField = React.createClass({
     );
   }
 });
+
+export default GrassField

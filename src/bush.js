@@ -2,7 +2,7 @@ var React = require('react');
 var us = require('underscore');
 var randomColor = require('./utils/random_color').default;
 
-export var Bush = React.createClass({
+var Bush = React.createClass({
   getInitialState: function() {
     var countOfLeaves = us.random(100, 200);
     var leaves = us.range(countOfLeaves).map(function (_, index) {
@@ -50,3 +50,5 @@ export var Bush = React.createClass({
     );
   }
 });
+
+export default Bush

@@ -1,8 +1,12 @@
 var React = require('react');
-var ReactDOM = require('react-dom');
-var Screen = require('./Screen').Screen;
+import { render } from 'react-dom';
+import Screen from './screen';
+import { Provider } from 'react-redux'
+import { Store } from './store'
 
-ReactDOM.render(
-  <Screen />,
+render(
+  <Provider store={Store}>
+    <Screen />
+  </Provider>,
   document.getElementById('example')
 );

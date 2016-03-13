@@ -7,7 +7,7 @@ export var HeroPosition = {
   y: 800
 }
 
-export var Hero = React.createClass({
+var Hero = React.createClass({
   getInitialState: function() {
     return  {
       x: HeroPosition.x,
@@ -88,3 +88,5 @@ export var Hero = React.createClass({
     );
   }
 });
+
+export default Hero
