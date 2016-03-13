@@ -1,4 +1,6 @@
 import Map from '../map.json'
+import { Point } from 'paper'
+import randomColor from '../utils/random_color'
 
 const SPEED = 30;
 const A_KEY = 65;
@@ -14,6 +16,58 @@ const initialState = {
   heroPosition: {
     x: 800,
     y: 800
+  },
+  bullets: []
+}
+
+var bulletCounter = 0;
+
+const frame = (state) => {
+  var newBullets = state.bullets.slice();
+  var timeNow = Date.now()
+  newBullets.forEach(function(bullet) {
+    if(!bullet.updated) {
+      if((timeNow - bullet.createdAt) > 10) {
+        bullet.x = bullet.targetX;
+        bullet.y = bullet.targetY;
+        bullet.updated = true;
+      }
+    }
+  });
+  newBullets = newBullets.filter(function (bullet) {
+    return ((timeNow - bullet.createdAt) < 1000);
+  })
+  return {
+    scenePosition: state.scenePosition,
+    heroPosition: state.heroPosition,
+    bullets: newBullets
+  }
+}
+
+const addBullet = (state, e) => {
+  var newBullets = state.bullets.slice();
+  var targetX = e.clientX - state.scenePosition.x;
+  var targetY = e.clientY - state.scenePosition.y;
+  var xPoint = targetX - state.heroPosition.x;
+  var yPoint = targetY - state.heroPosition.y;
+  var point = new Point(xPoint, yPoint);
+  point.length = 1000;
+  targetX = point.x + state.heroPosition.x;
+  targetY = point.y + state.heroPosition.y;
+  newBullets.push({
+    x: state.heroPosition.x,
+    y: state.heroPosition.y,
+    targetX,
+    targetY,
+    id: bulletCounter++,
+    createdAt: Date.now(),
+    updated: false,
+    fill: randomColor(211,59,77, 50)
+  })
+  return {
+    scenePosition: state.scenePosition,
+    heroPosition: state.heroPosition,
+    bullets: newBullets
   }
 }
 
@@ -49,18 +103,23 @@ const move = (state, keyCode) => {
 
   return {
     scenePosition: {x: sceneX, y: sceneY},
-    heroPosition: {x: heroX, y: heroY}
+    heroPosition: {x: heroX, y: heroY},
+    bullets: state.bullets
   };
 };
 
-const reducerKeyPress = (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'KEYPRESS':
       return move(state, action.keyCode)
       break;
+    case 'ONCLICK':
+      return addBullet(state, action.e)
+    case 'FRAME':
+      return frame(state);
     default:
       return state;
   }
 }
 
-export default reducerKeyPress
+export default reducer

@@ -6,9 +6,14 @@ export const keyPressAction = (keyCode) => {
 }
 
 export const onClickAction = (e) => {
-  console.log(e);
   return {
     type: 'ONCLICK',
     e: e
+  }
+}
+
+export const frameAction = () => {
+  return {
+    type: 'FRAME'
   }
 }
