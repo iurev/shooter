@@ -17,12 +17,6 @@ var Bush = React.createClass({
     var leaves = us.range(countOfLeaves).map(function (_, index) {
       var cx = us.random(0,40)
       var cy = us.random(0,40)
-      var r;
-      if(index <= 5) {
-        r = 20;
-      } else {
-        r = us.random(3, 8)
-      }
       var center = {
         x: 20,
         y: 20
