@@ -4,10 +4,12 @@ var keyboardJS = require('keyboardjs');
 var us = require('underscore');
 var map = require('./map.json');
 var Bush = require('./bush').Bush;
+var Grass = require('./grass').Grass;
 var Immutable = require('immutable');
 var Paper = require('paper');
 var Point = Paper.Point;
 var randomColor = require('./utils/random_color').default;
+
 var HeroPosition = {
   x: 800,
   y: 800
@@ -95,44 +97,6 @@ var Hero = React.createClass({
   }
 });
 
-var Grass = React.createClass({
-  getInitialState: function() {
-    var cellType = map[this.props.xIndex][this.props.yIndex].cellType;
-    return {
-      cellType,
-      fill: this.getColorByType(cellType)
-    }
-  },
-  getColorByType: function(cellType = this.stats.cellType) {
-    switch (cellType) {
-      case 'grass':
-        return randomColor()
-        break;
-      case 'sand':
-        return randomColor(240,231,0)
-        break;
-      case 'water':
-        return randomColor(85,134,240)
-        break;
-    }
-  },
-  render: function() {
-    // console.log('render grass');
-    var width = 100;
-    var height = 100;
-    var rectStyle = {
-      fill: this.state.fill,
-      strokeWidth: 0,
-      stroke:'rgb(0,0,0)',
-      x: this.props.xIndex * width,
-      y: this.props.yIndex * height
-    };
-
-    return (
-      <rect width={width} height={height} style={rectStyle} />
-    );
-  }
-});
 
 var Bullet = React.createClass({
   getInitialState: function() {
