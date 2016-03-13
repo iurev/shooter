@@ -39,7 +39,7 @@ var Bush = React.createClass({
     return {
       leaves,
       style: {
-        transform: 'translate(1000px, 1500px)'
+        transform: `translate(${this.props.x}px, ${this.props.y}px)`
       }
     }
   },
@@ -248,7 +248,8 @@ var GrassField = React.createClass({
         <g style={positionCss}>
           {this.state.grasses}
           <Hero />
-          <Bush />
+          <Bush x="1000" y="1900"/>
+          <Bush x="1900" y="1200"/>
         </g>
       </svg>
     );
