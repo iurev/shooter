@@ -11,7 +11,6 @@ const heroCss = {
 
 const HeroPresenter = ({position}) => {
   var positionCss = {
-    transition: 'transform 0.05s linear',
     transform: `translate(${position.x}px, ${position.y}px)`
   }
   return (

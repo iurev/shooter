@@ -2,7 +2,7 @@ import Map from '../map.json'
 import { Point } from 'paper'
 import randomColor from '../utils/random_color'
 
-const SPEED = 30;
+const SPEED = 10;
 const A_KEY = 65;
 const D_KEY = 68;
 const S_KEY = 83;

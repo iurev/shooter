@@ -7,7 +7,6 @@ import Bullets from '../bullets/group_container'
 
 const ScenePresenter = ({ position, onClick }) => {
   var positionCss = {
-    transition: 'transform 0.05s linear',
     transform: `translate(${position.x}px, ${position.y}px)`
   }
   return (
