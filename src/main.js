@@ -63,6 +63,8 @@ var Bush = React.createClass({
 var Hero = React.createClass({
   getInitialState: function() {
     return  {
+      x: 0,
+      y: 0,
       rectStyle: {
         cx: '50%',
         cy: '50%',
@@ -73,9 +75,64 @@ var Hero = React.createClass({
       }
     };
   },
+  move: function(direction) {
+    var x = this.state.x;
+    var y = this.state.y;
+    var speed = 30;
+    switch (direction) {
+      case 'left':
+        x -= speed;
+        break;
+      case 'right':
+        x += speed;
+        break;
+      case 'top':
+        y -= speed;
+        break;
+      case 'down':
+        y += speed;
+        break;
+      default:
+
+    }(direction)
+    this.setState({
+      x,
+      y,
+      rectStyle: {
+        cx: '50%',
+        cy: '50%',
+        fill: '#441537',
+        strokeWidth: 1,
+        stroke:'rgb(0,0,0)',
+        r: 40
+      }
+    });
+  },
+  componentDidMount: function() {
+    var that = this;
+    keyboardJS.bind('a', function(e) {
+      that.move('left');
+    });
+    keyboardJS.bind('w', function(e) {
+      that.move('top');
+    });
+    keyboardJS.bind('d', function(e) {
+      that.move('right');
+    });
+    keyboardJS.bind('s', function(e) {
+      that.move('down');
+    });
+  },
   render: function() {
+    // console.log('hero render');
+    var positionCss = {
+      transition: 'transform 0.1s linear',
+      transform: 'translate(' + this.state.x + 'px,' + this.state.y + 'px)'
+    }
     return (
-      <circle style={this.state.rectStyle} />
+      <g style={positionCss}>
+        <circle style={this.state.rectStyle} />
+      </g>
     );
   }
 });
@@ -102,7 +159,7 @@ var Grass = React.createClass({
     }
   },
   render: function() {
-    console.log('render grass');
+    // console.log('render grass');
     var width = 100;
     var height = 100;
     var rectStyle = {
@@ -146,16 +203,16 @@ var GrassField = React.createClass({
     var speed = 30;
     switch (direction) {
       case 'left':
-        x -= speed;
-        break;
-      case 'right':
         x += speed;
         break;
+      case 'right':
+        x -= speed;
+        break;
       case 'top':
-        y -= speed;
+        y += speed;
         break;
       case 'down':
-        y += speed;
+        y -= speed;
         break;
       default:
 
@@ -187,14 +244,13 @@ var GrassField = React.createClass({
       <svg width="100%" height="100%" onKeyDown={this.onKeyDown} key="1">
         <g style={positionCss}>
           {this.state.grasses}
+          <Bush />
+          <Hero />
         </g>
-        <Hero />
-        <Bush />
       </svg>
     );
   }
 });
-
 
 
 ReactDOM.render(
