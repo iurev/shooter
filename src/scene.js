@@ -1,25 +1,15 @@
 var React = require('react');
 var keyboardJS = require('keyboardjs');
-var map = require('./map.json');
+var GrassField = require('./grass_field').GrassField;
+var Hero = require('./hero').Hero;
+var Bullets = require('./bullets').Bullets;
+var Bush = require('./bush').Bush;
 
-export var HeroPosition = {
-  x: 800,
-  y: 800
-}
-
-export var Hero = React.createClass({
+export var Scene = React.createClass({
   getInitialState: function() {
-    return  {
-      x: HeroPosition.x,
-      y: HeroPosition.y,
-      rectStyle: {
-        cx: 0,
-        cy: 0,
-        fill: '#441537',
-        strokeWidth: 1,
-        stroke:'rgb(0,0,0)',
-        r: 40
-      }
+    return {
+      x: 0,
+      y: 0
     };
   },
   move: function(direction) {
@@ -28,37 +18,21 @@ export var Hero = React.createClass({
     var speed = 30;
     switch (direction) {
       case 'left':
-        x -= speed;
-        break;
-      case 'right':
         x += speed;
         break;
+      case 'right':
+        x -= speed;
+        break;
       case 'top':
-        y -= speed;
+        y += speed;
         break;
       case 'down':
-        y += speed;
+        y -= speed;
         break;
       default:
 
     }(direction)
-    var xIndex = Math.floor(x / 100);
-    var yIndex = Math.floor(y / 100);
-    if(map[xIndex][yIndex].cellType === 'water') { return }
-    HeroPosition.x = x;
-    HeroPosition.y = y;
-    this.setState({
-      x,
-      y,
-      rectStyle: {
-        cx: 0,
-        cy: 0,
-        fill: '#441537',
-        strokeWidth: 1,
-        stroke:'rgb(0,0,0)',
-        r: 40
-      }
-    });
+    this.setState({x: x, y: y});
   },
   componentDidMount: function() {
     var that = this;
@@ -75,15 +49,21 @@ export var Hero = React.createClass({
       that.move('down');
     });
   },
+  bullets: function (e) {
+    var x = this.refs.bullets.bullet(e, {x: this.state.x, y: this.state.y});
+  },
   render: function() {
-    // console.log('hero render');
     var positionCss = {
       transition: 'transform 0.05s linear',
       transform: 'translate(' + this.state.x + 'px,' + this.state.y + 'px)'
     }
     return (
-      <g style={positionCss}>
-        <circle style={this.state.rectStyle} />
+      <g style={positionCss} onClick={this.bullets}>
+        <GrassField />
+        <Hero />
+        <Bullets ref="bullets" />
+        <Bush x="1000" y="1900"/>
+        <Bush x="1900" y="1200"/>
       </g>
     );
   }

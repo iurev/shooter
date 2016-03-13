@@ -1,5 +1,4 @@
 var React = require('react');
-var ReactDOM = require('react-dom');
 var randomColor = require('./utils/random_color').default;
 var map = require('./map.json');
 

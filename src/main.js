@@ -1,8 +1,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var GrassField = require('./grass_field').GrassField;
+var Screen = require('./Screen').Screen;
 
 ReactDOM.render(
-  <GrassField />,
+  <Screen />,
   document.getElementById('example')
 );

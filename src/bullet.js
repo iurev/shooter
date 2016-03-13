@@ -1,5 +1,4 @@
 var React = require('react');
-var ReactDOM = require('react-dom');
 var randomColor = require('./utils/random_color').default;
 
 export var Bullet = React.createClass({
