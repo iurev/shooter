@@ -1,3 +1,5 @@
+import Map from '../map.json'
+
 const SPEED = 30;
 const A_KEY = 65;
 const D_KEY = 68;
@@ -5,28 +7,50 @@ const S_KEY = 83;
 const W_KEY = 87;
 
 const initialState = {
-  x: 0,
-  y: 0
+  scenePosition: {
+    x: 0,
+    y: 0
+  },
+  heroPosition: {
+    x: 800,
+    y: 800
+  }
 }
 
-const move = (position, keyCode) => {
-  var x = position.x;
-  var y = position.y;
+const move = (state, keyCode) => {
+  var sceneX = state.scenePosition.x;
+  var sceneY = state.scenePosition.y;
+  var heroX = state.heroPosition.x;
+  var heroY = state.heroPosition.y;
+
   switch (keyCode) {
     case A_KEY:
-      x += SPEED;
+      heroX -= SPEED;
+      sceneX += SPEED;
       break;
     case D_KEY:
-      x -= SPEED;
+      heroX += SPEED;
+      sceneX -= SPEED;
       break;
     case W_KEY:
-      y += SPEED;
+      heroY -= SPEED;
+      sceneY += SPEED;
       break;
     case S_KEY:
-      y -= SPEED;
+      heroY += SPEED;
+      sceneY -= SPEED;
       break;
   }(keyCode)
-  return {x, y};
+
+  var xIndex = Math.floor(heroX / 100);
+  var yIndex = Math.floor(heroY / 100);
+
+  if(Map[xIndex][yIndex].cellType === 'water') { return state }
+
+  return {
+    scenePosition: {x: sceneX, y: sceneY},
+    heroPosition: {x: heroX, y: heroY}
+  };
 };
 
 const reducerKeyPress = (state = initialState, action) => {

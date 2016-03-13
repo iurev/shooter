@@ -1,11 +1,10 @@
 import { connect } from 'react-redux'
 import ScenePresenter from './presenter.js'
-import { keyPressAction, onClickAction } from './actions.js'
-import { Store } from '../store'
+import { onClickAction } from './actions.js'
 
 const mapStateToProps = (state) => {
   return {
-    position: state
+    position: state.scenePosition
   }
 }
 
@@ -15,10 +14,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(onClickAction(e));
     }
   }
-}
-
-document.onkeydown = function(e) {
-  Store.dispatch(keyPressAction(e.keyCode));
 }
 
 const Scene = connect(mapStateToProps, mapDispatchToProps)(ScenePresenter)
