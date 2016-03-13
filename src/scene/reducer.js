@@ -8,6 +8,8 @@ const D_KEY = 68;
 const S_KEY = 83;
 const W_KEY = 87;
 
+var shouldUpdateBullets = false
+
 const initialState = {
   scenePosition: {
     x: 0,
@@ -23,6 +25,7 @@ const initialState = {
 var bulletCounter = 0;
 
 const frame = (state) => {
+  if(!shouldUpdateBullets) { return state }
   var newBullets = state.bullets.slice();
   var timeNow = Date.now()
   newBullets.forEach(function(bullet) {
@@ -33,10 +36,13 @@ const frame = (state) => {
         bullet.updated = true;
       }
     }
-  });
+  })
   newBullets = newBullets.filter(function (bullet) {
     return ((timeNow - bullet.createdAt) < 1000);
   })
+  if(!newBullets.length) {
+    shouldUpdateBullets = false
+  }
   return {
     scenePosition: state.scenePosition,
     heroPosition: state.heroPosition,
@@ -64,6 +70,7 @@ const addBullet = (state, e) => {
     updated: false,
     fill: randomColor(211,59,77, 50)
   })
+  shouldUpdateBullets = true;
   return {
     scenePosition: state.scenePosition,
     heroPosition: state.heroPosition,
