@@ -63,11 +63,11 @@ var Bush = React.createClass({
 var Hero = React.createClass({
   getInitialState: function() {
     return  {
-      x: 0,
-      y: 0,
+      x: 800,
+      y: 800,
       rectStyle: {
-        cx: '50%',
-        cy: '50%',
+        cx: 0,
+        cy: 0,
         fill: '#441537',
         strokeWidth: 1,
         stroke:'rgb(0,0,0)',
@@ -95,12 +95,15 @@ var Hero = React.createClass({
       default:
 
     }(direction)
+    var xIndex = Math.floor(x / 100);
+    var yIndex = Math.floor(y / 100);
+    if(map[xIndex][yIndex].cellType === 'water') { return }
     this.setState({
       x,
       y,
       rectStyle: {
-        cx: '50%',
-        cy: '50%',
+        cx: 0,
+        cy: 0,
         fill: '#441537',
         strokeWidth: 1,
         stroke:'rgb(0,0,0)',
@@ -126,7 +129,7 @@ var Hero = React.createClass({
   render: function() {
     // console.log('hero render');
     var positionCss = {
-      transition: 'transform 0.1s linear',
+      transition: 'transform 0.05s linear',
       transform: 'translate(' + this.state.x + 'px,' + this.state.y + 'px)'
     }
     return (
@@ -235,9 +238,9 @@ var GrassField = React.createClass({
     });
   },
   render: function() {
-    console.log('render grass field');
+    // console.log('render grass field');
     var positionCss = {
-      transition: 'transform 0.1s linear',
+      transition: 'transform 0.05s linear',
       transform: 'translate(' + this.state.x + 'px,' + this.state.y + 'px)'
     }
     return (
