@@ -4,6 +4,7 @@ import GrassField from '../grass_field'
 import Hero from '../hero/container'
 import Bush from '../bush'
 import Bullets from '../bullets/group_container'
+import Monsters from '../monsters/group_container'
 
 const ScenePresenter = ({ position, onClick }) => {
   var positionCss = {
@@ -20,6 +21,7 @@ const ScenePresenter = ({ position, onClick }) => {
       }} >
       <GrassField />
       <Hero />
+      <Monsters />
       <Bullets />
     </g>
   )

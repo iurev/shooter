@@ -16,37 +16,110 @@ const initialState = {
     y: 0
   },
   heroPosition: {
-    x: 800,
-    y: 800
+    x: Math.floor(window.innerWidth/2),
+    y: Math.floor(window.innerHeight/2)
   },
-  bullets: []
+  bullets: [],
+  monsters: [
+    {
+      x: 1000,
+      y: 1000,
+      id: 1
+    },
+    {
+      x: 1200,
+      y: 1200,
+      id: 2
+    },
+    {
+      x: 1300,
+      y: 800,
+      id: 3
+    }
+  ]
 }
 
 var bulletCounter = 0;
 
-const frame = (state) => {
-  if(!shouldUpdateBullets) { return state }
-  var newBullets = state.bullets.slice();
+const updateBullets = (newBullets, state) => {
   var timeNow = Date.now()
-  newBullets.forEach(function(bullet) {
-    if(!bullet.updated) {
-      if((timeNow - bullet.createdAt) > 10) {
-        bullet.x = bullet.targetX;
-        bullet.y = bullet.targetY;
-        bullet.updated = true;
-      }
-    }
-  })
   newBullets = newBullets.filter(function (bullet) {
     return ((timeNow - bullet.createdAt) < 1000);
   })
-  if(!newBullets.length) {
-    shouldUpdateBullets = false
+  newBullets.forEach(function (bullet) {
+    let vel = nextPoint({
+      target: {
+        x: bullet.targetX,
+        y: bullet.targetY
+      },
+      current: {
+        x: bullet.x,
+        y: bullet.y
+      }
+    }, 150)
+    bullet.x += vel.x
+    bullet.y += vel.y
+  })
+  return newBullets;
+}
+
+const nextPoint = (obj, speed=SPEED*1.2) => {
+  let tx = obj.target.x - obj.current.x
+  let ty = obj.target.y - obj.current.y
+  let dist = Math.sqrt(tx*tx+ty*ty)
+  let velX = (tx/dist)*speed
+  let velY = (ty/dist)*speed
+
+  return {
+    x: velX,
+    y: velY,
+    dist: dist
   }
+}
+
+const updateMonsters = (newMonsters, state) => {
+  // var heroPoint = new Point(state.heroPosition.x, state.heroPosition.y)
+  // console.log(newMonsters.length)
+  newMonsters.forEach(function (monster) {
+    // var monsterPoint = new Point(monster.x, monster.y)
+    var x = state.heroPosition.x - monster.x
+    var y = state.heroPosition.y - monster.y
+    var vector = new Point(x, y)
+    var distance = vector.length
+    if(distance < 500) {
+      let vel = nextPoint({
+        target: {
+          x: state.heroPosition.x,
+          y: state.heroPosition.y
+        },
+        current: {
+          x: monster.x,
+          y: monster.y
+        }
+      })
+
+      if(vel.dist >= 50) {
+        monster.x += vel.x
+        monster.y += vel.y
+      }
+    }
+  })
+
+  return newMonsters;
+}
+
+const frame = (state) => {
+  // if(!shouldUpdateBullets) { return state }
+  var newBullets = state.bullets.slice();
+  var newMonsters = state.monsters.slice();
+  newBullets = updateBullets(newBullets, state);
+  newMonsters = updateMonsters(newMonsters, state);
+
   return {
     scenePosition: state.scenePosition,
     heroPosition: state.heroPosition,
-    bullets: newBullets
+    bullets: newBullets,
+    monsters: newMonsters
   }
 }
 
@@ -74,7 +147,8 @@ const addBullet = (state, e) => {
   return {
     scenePosition: state.scenePosition,
     heroPosition: state.heroPosition,
-    bullets: newBullets
+    bullets: newBullets,
+    monsters: state.monsters
   }
 }
 
@@ -111,7 +185,8 @@ const move = (state, keyCode) => {
   return {
     scenePosition: {x: sceneX, y: sceneY},
     heroPosition: {x: heroX, y: heroY},
-    bullets: state.bullets
+    bullets: state.bullets,
+    monsters: state.monsters
   };
 };
 
