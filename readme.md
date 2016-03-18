@@ -13,7 +13,7 @@ Simple shooter, written using SVG + React + Redux
 
 # Screenshot
 
-<img width="1837" alt="screen shot 2016-03-13 at 8 58 43 pm" src="https://cloud.githubusercontent.com/assets/3179564/13729073/944a2ec8-e95e-11e5-882d-057588f453ea.png">
+<img width="1837" alt="screen shot 2016-03-13 at 8 58 43 pm" src="https://cloud.githubusercontent.com/assets/3179564/13868428/2c1a5c56-ecfb-11e5-85a0-5aeaf8a76924.png">
 
 
 # How to install
