@@ -1,12 +1,24 @@
 import Map from '../map.json'
 import { Point } from 'paper'
 import randomColor from '../utils/random_color'
+import us from 'underscore'
 
 const SPEED = 10;
 const A_KEY = 65;
 const D_KEY = 68;
 const S_KEY = 83;
 const W_KEY = 87;
+
+const respawnPoints = [
+  {
+    x: 900,
+    y: 1200
+  },
+  {
+    x: 1500,
+    y: 1200
+  }
+]
 
 var shouldUpdateBullets = false
 
@@ -20,24 +32,11 @@ const initialState = {
     y: Math.floor(window.innerHeight/2)
   },
   bullets: [],
-  monsters: [
-    {
-      x: 1000,
-      y: 1000,
-      id: 1
-    },
-    {
-      x: 1200,
-      y: 1200,
-      id: 2
-    },
-    {
-      x: 1300,
-      y: 800,
-      id: 3
-    }
-  ]
+  monsters: [],
+  isPlay: true
 }
+
+let monsterCounter = 0;
 
 var bulletCounter = 0;
 
@@ -78,10 +77,25 @@ const nextPoint = (obj, speed=SPEED*1.2) => {
 }
 
 const updateMonsters = (newMonsters, state) => {
-  // var heroPoint = new Point(state.heroPosition.x, state.heroPosition.y)
-  // console.log(newMonsters.length)
+  newMonsters = newMonsters.slice()
+  newMonsters = newMonsters.filter(function(monster) {
+    for (let bullet of state.bullets) {
+      let dist = distance(bullet, monster)
+      if(dist <= 100) {
+        return false
+      }
+    }
+    return true
+  })
+  if(newMonsters.length < 3) {
+    let point = us.sample(respawnPoints)
+    newMonsters.push({
+      x: point.x,
+      y: point.y,
+      id: monsterCounter++
+    })
+  }
   newMonsters.forEach(function (monster) {
-    // var monsterPoint = new Point(monster.x, monster.y)
     var x = state.heroPosition.x - monster.x
     var y = state.heroPosition.y - monster.y
     var vector = new Point(x, y)
@@ -108,18 +122,40 @@ const updateMonsters = (newMonsters, state) => {
   return newMonsters;
 }
 
+const distance = (point1, point2) => {
+  var x = point1.x - point2.x
+  var y = point1.y - point2.y
+  return Math.sqrt(x*x + y*y)
+}
+
+const checkIsHeroDie = (state) => {
+  for(let monster of state.monsters) {
+    var dist = distance({
+      x: state.heroPosition.x,
+      y: state.heroPosition.y
+    },
+    monster)
+    if(dist <= 50) {
+      return true
+    }
+  }
+  return false
+}
+
 const frame = (state) => {
   // if(!shouldUpdateBullets) { return state }
   var newBullets = state.bullets.slice();
   var newMonsters = state.monsters.slice();
   newBullets = updateBullets(newBullets, state);
   newMonsters = updateMonsters(newMonsters, state);
+  var isPlay = !checkIsHeroDie(state)
 
   return {
     scenePosition: state.scenePosition,
     heroPosition: state.heroPosition,
     bullets: newBullets,
-    monsters: newMonsters
+    monsters: newMonsters,
+    isPlay: isPlay
   }
 }
 
@@ -141,14 +177,15 @@ const addBullet = (state, e) => {
     id: bulletCounter++,
     createdAt: Date.now(),
     updated: false,
-    fill: randomColor(211,59,77, 50)
+    fill: randomColor(107,22,0)
   })
   shouldUpdateBullets = true;
   return {
     scenePosition: state.scenePosition,
     heroPosition: state.heroPosition,
     bullets: newBullets,
-    monsters: state.monsters
+    monsters: state.monsters,
+    isPlay: state.isPlay
   }
 }
 
@@ -186,21 +223,26 @@ const move = (state, keyCode) => {
     scenePosition: {x: sceneX, y: sceneY},
     heroPosition: {x: heroX, y: heroY},
     bullets: state.bullets,
-    monsters: state.monsters
+    monsters: state.monsters,
+    isPlay: state.isPlay
   };
 };
 
 const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'KEYPRESS':
-      return move(state, action.keyCode)
-      break;
-    case 'ONCLICK':
-      return addBullet(state, action.e)
-    case 'FRAME':
-      return frame(state);
-    default:
-      return state;
+  if (state.isPlay) {
+    switch (action.type) {
+      case 'KEYPRESS':
+        return move(state, action.keyCode)
+        break;
+      case 'ONCLICK':
+        return addBullet(state, action.e)
+      case 'FRAME':
+        return frame(state);
+      default:
+        return state;
+    }
+  } else {
+    return state
   }
 }
 

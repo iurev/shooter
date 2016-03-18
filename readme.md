@@ -7,6 +7,8 @@ Simple shooter, written using SVG + React + Redux
 - you can run AWSD
 - random generated landscape colors (grass, water, sand)
 - shoot around you with colorful bullets
+- kill monsters
+- monsters can kill you
 - you cannot swim
 
 # Screenshot

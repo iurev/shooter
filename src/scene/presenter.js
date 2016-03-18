@@ -13,7 +13,7 @@ const ScenePresenter = ({ position, onClick }) => {
   return (
     <g id="scene_presenter"
       style={positionCss}
-      onClick={(e) => {
+      onMouseDown={(e) => {
         onClick({
           clientX: e.clientX,
           clientY: e.clientY

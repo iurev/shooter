@@ -8,10 +8,10 @@ import Key from './key.js'
 
 var callback = function() {
   Store.dispatch(frameAction());
-  window.requestAnimationFrame(callback)
   Key.pressed().forEach(function(keyCode) {
     Store.dispatch(keyPressAction(keyCode))
   })
+  window.requestAnimationFrame(callback)
 }
 
 window.requestAnimationFrame(callback)
