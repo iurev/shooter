@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-import GrassField from '../grass_field'
+import Cells from '../cells/group_container'
 import Hero from '../hero/container'
 import Bush from '../bush'
 import Bullets from '../bullets/group_container'
@@ -19,7 +19,7 @@ const ScenePresenter = ({ position, onClick }) => {
           clientY: e.clientY
         })
       }} >
-      <GrassField />
+      <Cells />
       <Hero />
       <Monsters />
       <Bullets />

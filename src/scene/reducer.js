@@ -1,4 +1,4 @@
-import Map from '../map.json'
+import Map from '../map_generator.js'
 import { Point } from 'paper'
 import randomColor from '../utils/random_color'
 import us from 'underscore'
@@ -33,7 +33,8 @@ const initialState = {
   },
   bullets: [],
   monsters: [],
-  isPlay: true
+  isPlay: true,
+  cells: []
 }
 
 let monsterCounter = 0;
@@ -142,20 +143,43 @@ const checkIsHeroDie = (state) => {
   return false
 }
 
+const updateMap = (state) => {
+  var map = []
+  var lastItem = Map.length - 1
+  var x = Math.floor(state.heroPosition.x / 100)
+  var y = Math.floor(state.heroPosition.y / 100)
+  var max = 10
+  var firstXIndex = x - max
+  var lastXIndex = x + max
+  var firstYIndex = y - max
+  var lastYIndex = y + max
+
+  if(firstXIndex<0) firstXIndex = 0
+  if(lastXIndex>lastItem) lastXIndex = lastItem
+  if(firstYIndex<0) firstYIndex = 0
+  if(lastYIndex>lastItem) lastYIndex = lastItem
+
+  for(let xIndex=firstXIndex; xIndex<=lastXIndex; xIndex++) {
+    map = map.concat(Map[xIndex].slice(firstYIndex, lastYIndex))
+  }
+  return map
+}
+
 const frame = (state) => {
-  // if(!shouldUpdateBullets) { return state }
   var newBullets = state.bullets.slice();
   var newMonsters = state.monsters.slice();
   newBullets = updateBullets(newBullets, state);
   newMonsters = updateMonsters(newMonsters, state);
   var isPlay = !checkIsHeroDie(state)
+  var newMap = updateMap(state)
 
   return {
     scenePosition: state.scenePosition,
     heroPosition: state.heroPosition,
     bullets: newBullets,
     monsters: newMonsters,
-    isPlay: isPlay
+    isPlay: isPlay,
+    cells: newMap
   }
 }
 
@@ -185,7 +209,8 @@ const addBullet = (state, e) => {
     heroPosition: state.heroPosition,
     bullets: newBullets,
     monsters: state.monsters,
-    isPlay: state.isPlay
+    isPlay: state.isPlay,
+    cells: state.cells
   }
 }
 
@@ -224,7 +249,8 @@ const move = (state, keyCode) => {
     heroPosition: {x: heroX, y: heroY},
     bullets: state.bullets,
     monsters: state.monsters,
-    isPlay: state.isPlay
+    isPlay: state.isPlay,
+    cells: state.cells
   };
 };
 
