@@ -1,4 +1,4 @@
-import CellPresenter from './one_presenter'
+import CellPresenter from './presenter'
 import React, { PropTypes } from 'react'
 
 export const CellsPresenter = ({cells}) => {

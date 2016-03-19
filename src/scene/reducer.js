@@ -1,6 +1,8 @@
 import Map from '../map_generator.js'
+import { heroPosition } from '../map_generator.js'
 import { Point } from 'paper'
 import randomColor from '../utils/random_color'
+import distance from '../utils/distance'
 import us from 'underscore'
 
 const SPEED = 10;
@@ -20,16 +22,18 @@ const respawnPoints = [
   }
 ]
 
+
+
 var shouldUpdateBullets = false
 
 const initialState = {
   scenePosition: {
-    x: 0,
-    y: 0
+    x: - heroPosition.x + Math.floor(window.innerWidth/2),
+    y: - heroPosition.y + Math.floor(window.innerHeight/2)
   },
   heroPosition: {
-    x: Math.floor(window.innerWidth/2),
-    y: Math.floor(window.innerHeight/2)
+    x: heroPosition.x,
+    y: heroPosition.y
   },
   bullets: [],
   monsters: [],
@@ -121,12 +125,6 @@ const updateMonsters = (newMonsters, state) => {
   })
 
   return newMonsters;
-}
-
-const distance = (point1, point2) => {
-  var x = point1.x - point2.x
-  var y = point1.y - point2.y
-  return Math.sqrt(x*x + y*y)
 }
 
 const checkIsHeroDie = (state) => {
@@ -242,6 +240,7 @@ const move = (state, keyCode) => {
   var xIndex = Math.floor(heroX / 100);
   var yIndex = Math.floor(heroY / 100);
 
+  if((xIndex<=1) || (xIndex>(Map.length-1)) || (yIndex<=1) || (yIndex>(Map.length-1))) { return state }
   if(Map[xIndex][yIndex].cellType === 'water') { return state }
 
   return {
