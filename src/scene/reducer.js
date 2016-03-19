@@ -1,5 +1,5 @@
 import Map from '../map_generator.js'
-import { heroPosition } from '../map_generator.js'
+import { heroPosition, respawnPoints } from '../map_generator.js'
 import { Point } from 'paper'
 import randomColor from '../utils/random_color'
 import distance from '../utils/distance'
@@ -10,19 +10,6 @@ const A_KEY = 65;
 const D_KEY = 68;
 const S_KEY = 83;
 const W_KEY = 87;
-
-const respawnPoints = [
-  {
-    x: 900,
-    y: 1200
-  },
-  {
-    x: 1500,
-    y: 1200
-  }
-]
-
-
 
 var shouldUpdateBullets = false
 
@@ -82,6 +69,7 @@ const nextPoint = (obj, speed=SPEED*1.2) => {
 }
 
 const updateMonsters = (newMonsters, state) => {
+  const maxMonstersCount = 40
   newMonsters = newMonsters.slice()
   newMonsters = newMonsters.filter(function(monster) {
     for (let bullet of state.bullets) {
@@ -92,11 +80,11 @@ const updateMonsters = (newMonsters, state) => {
     }
     return true
   })
-  if(newMonsters.length < 3) {
+  if(newMonsters.length < maxMonstersCount) {
     let point = us.sample(respawnPoints)
     newMonsters.push({
-      x: point.x,
-      y: point.y,
+      x: point.x*100 + us.random(-50, 50),
+      y: point.y*100 + us.random(-50, 50),
       id: monsterCounter++
     })
   }

@@ -5,6 +5,7 @@ import distance from './utils/distance'
 var map = []
 var size = 100
 var earthPoints = []
+var respawnPoints = []
 
 const indexToString = (index) => {
   var length = size.toString().length
@@ -27,6 +28,9 @@ const getColorByType = (cellType) => {
       break;
     case 'water':
       return randomColor(85,134,240)
+      break;
+    case 'cave':
+      return randomColor(23,55,22)
       break;
   }
 }
@@ -140,8 +144,27 @@ const generateRandomIsland = () => {
   updateCellsTypes()
 }
 
+const addRespawnPoints = () => {
+  var points = us.last(earthPoints, 100)
+  points = points.filter((point) => {
+    return ((point.x >= 2) &&
+      (point.x < (size-2)) &&
+      (point.y >= 2) &&
+      (point.y < (size-2)))
+  })
+  points = us(points).sample(20)
+
+  us(points).each((point) => {
+    var mapPoint = map[point.x][point.y]
+    mapPoint.fill = getColorByType('cave')
+    mapPoint.cellType = 'cave'
+    respawnPoints.push(point)
+  })
+}
+
 fillMapWithWater()
 generateRandomIsland()
+addRespawnPoints()
 
 const Map = map
 
@@ -149,5 +172,7 @@ export var heroPosition =  {
   x: earthPoints[0].x*100,
   y: earthPoints[0].x*100
 }
+
+export var respawnPoints = respawnPoints
 
 export default Map
